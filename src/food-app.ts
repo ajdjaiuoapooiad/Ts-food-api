@@ -1,6 +1,6 @@
 class Score { 
     get totalScore(){
-        const foods = new Foods()
+        const foods = Foods.getInstance()
         return foods.activeElementsScore.reduce((total,score) => total + score, 0)
     }
     render(){
@@ -20,6 +20,7 @@ class Food {
     }
 }
 class Foods { 
+    private static instance: Foods;
     elements = document.querySelectorAll<HTMLDivElement>('.food')
     private _activeElements: HTMLDivElement[] = []
     private _activeElementsScore: number[] = [];
@@ -44,11 +45,17 @@ class Foods {
         return this._activeElementsScore
     }
 
-    constructor(){
+    private constructor(){
         this.elements.forEach(element => {
             new Food(element);
         })
     }
+    static getInstance(){
+        if(!Foods.instance){
+            Foods.instance = new Foods();
+        }
+        return Foods.instance;
+    }
 }
 
-const foods = new Foods()
+const foods = Foods.getInstance();
